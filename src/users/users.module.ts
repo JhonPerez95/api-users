@@ -5,6 +5,7 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { userConstants } from './utils';
 
 @Module({
   imports: [
@@ -12,7 +13,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
+        type: userConstants.TYPE_DATABASE,
+        // type: 'mysql',
+
         host: configService.get('dbMysql.host'),
         port: configService.get('dbMysql.port'),
         database: configService.get('dbMysql.database'),
@@ -22,6 +25,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: true,
       }),
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [UsersController],
   providers: [UsersService],

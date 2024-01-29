@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# Copia el archivo .env
+COPY .env ./
+
+
 FROM --platform=linux/amd64 node:16-alpine AS builder
 WORKDIR /app
 
@@ -14,6 +18,9 @@ RUN npm run build
 
 FROM --platform=linux/amd64 node:16-alpine AS runner
 WORKDIR /app
+
+# Copia el archivo .env
+COPY .env ./
 
 COPY package*.json ./
 RUN npm install --production
